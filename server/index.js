@@ -14,6 +14,7 @@ const FRONTEND_URL=process.env.FRONTEND_URL;
 
 
 const allowedOrigins = ENVIRONMENT==="DEV"?['http://localhost:5173']:[FRONTEND_URL];
+console.log(allowedOrigins);
 
 const corsOptions = {
   origin: (origin, callback) => {
@@ -24,12 +25,16 @@ const corsOptions = {
     }
   },
   methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE','PATCH'],
-  credentials: false,
   allowedHeaders: ['X-CSRF-Token', 'X-Requested-With', 'Accept', 'Accept-Version', 'Content-Length', 'Content-MD5', 'Content-Type', 'Date', 'X-Api-Version', 'Authorization'],
   optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));
+
+// Handle preflight requests
+
+app.options('*', cors(corsOptions));
+
 
 app.use(router);
 
