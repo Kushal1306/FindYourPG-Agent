@@ -9,8 +9,11 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
+const ENVIRONMENT=process.env.ENVIRONMENT;
+const FRONTEND_URL=process.env.FRONTEND_URL;
+
 const corsOptions = {
-    origin:"*",
+    origin:ENVIRONMENT==="DEV"?"*":FRONTEND_URL,
     methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE','PATCH'],
     credentials: true,
     allowedHeaders: ['X-CSRF-Token', 'X-Requested-With', 'Accept', 'Accept-Version', 'Content-Length', 'Content-MD5', 'Content-Type', 'Date', 'X-Api-Version', 'Authorization']
