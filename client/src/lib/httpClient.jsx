@@ -10,7 +10,12 @@ const httpClient = axios.create({
 
 
 export const httpClient2=axios.create({
-   baseURL:BACKEND_URL
+  baseURL:BACKEND_URL,
+  timeout: 30000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  withCredentials: false
 });
 
 // httpClient.defaults.withCredentials = true;

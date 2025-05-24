@@ -170,7 +170,6 @@ const PGIndexForm = () => {
   const fetchGoogleData = async () => {
     setIsLoading(true)
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000))
 
       if(!(formData.address.trim() && formData.name.trim())){
         alert("Please enter address and name")
