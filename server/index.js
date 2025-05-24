@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import router from './routes/index.js';
+import mainRouter from './routes/index.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -11,10 +11,10 @@ const FRONTEND_URL = process.env.FRONTEND_URL;
 const app = express();
 app.use(express.json());
 
-const allowedOrigins =
-  ENVIRONMENT === 'DEV'
-    ? ['http://localhost:5173']
-    : [FRONTEND_URL];
+const allowedOrigins =['http://localhost:5173','https://find-your-pg-agent.vercel.app'];
+  // ENVIRONMENT === 'DEV'
+  //   ? ['http://localhost:5173']
+  //   : [FRONTEND_URL];
 
 const corsOptions = {
   origin: (origin, callback) => {
@@ -29,7 +29,7 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-app.use(router);
+app.use(mainRouter);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

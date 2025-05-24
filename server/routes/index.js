@@ -5,10 +5,10 @@ import messageRouter from "./messages.js";
 import pgRouter from "./pgRoutes.js";
 import geoDataRouter from "./geoData.js";
 
-const router = express.Router();
+const mainRouter = express.Router();
 
-router.use("/messages", messageRouter);
-router.use("/pg", pgRouter);
-router.use("/geo-data",geoDataRouter)
+mainRouter.use("/messages", messageRouter);
+mainRouter.use("/pg", pgRouter);
+mainRouter.use("/geo-data",geoDataRouter)
 
-export default router;
+export default mainRouter;
