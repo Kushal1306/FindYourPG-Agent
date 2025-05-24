@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+type PgRoomTypes {
+  amenities        String[]
+  attachedBathroom Boolean
+  capacity         Float
+  description      String
+  isAcAvailable    Boolean
+  isAvailable      Boolean
+  name             String
+  pricePerMonth    Float
+  securityDeposit  Float
+}
+
+model PG {
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  address        String
+  amenities      String[]
+  city           String
+  contactNumber  String
+  coordinates    Float[]
+  createdAt      DateTime      @db.Date
+  description    String
+  email          String
+  foodType       String
+  googleMapsLink String
+  googleRating   Float
+  images         String[]
+  isActive       Boolean
+  maxPrice       Float
+  minPrice       Float
+  name           String
+  pincode        String
+  roomTypes      PgRoomTypes[]
+  state          String
+  terms          String[]
+  type           String
+  updatedAt      DateTime      @db.Date
+  websiteLink    String
+
+  @@index([city])
+  @@index([type])
+  @@index([foodType])
+  @@index([minPrice, maxPrice])
+  @@index([coordinates], map: "coordinates_2dsphere")
+}

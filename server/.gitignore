@@ -1,0 +1,9 @@
+node_modules/
+
+.env
+
+*.log
+
+
+helpers/log.txt
+helpers/logger.js
