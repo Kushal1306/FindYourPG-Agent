@@ -26,15 +26,9 @@ const corsOptions = {
   },
   methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE','PATCH'],
   allowedHeaders: ['X-CSRF-Token', 'X-Requested-With', 'Accept', 'Accept-Version', 'Content-Length', 'Content-MD5', 'Content-Type', 'Date', 'X-Api-Version', 'Authorization'],
-  optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));
-
-// Handle preflight requests
-
-app.options('*', cors(corsOptions));
-
 
 app.use(router);
 
