@@ -1,20 +1,20 @@
-import express from "express";
-import dotenv from "dotenv";
-import router from "../server/routes/index.js";
-import { runDummyPGQuery } from "./helpers/pg.js";
-import { findNearestPG } from "./helpers/executeToolCall.js";
-import cors from "cors";
+import express from 'express';
+import cors from 'cors';
+import router from './routes/index.js';
+import dotenv from 'dotenv';
 dotenv.config();
+
+const PORT = process.env.PORT || 3000;
+const ENVIRONMENT = process.env.ENVIRONMENT;
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
 const app = express();
 app.use(express.json());
 
-const ENVIRONMENT=process.env.ENVIRONMENT;
-const FRONTEND_URL=process.env.FRONTEND_URL;
-
-
-const allowedOrigins = ENVIRONMENT==="DEV"?['http://localhost:5173']:[FRONTEND_URL];
-console.log(allowedOrigins);
+const allowedOrigins =
+  ENVIRONMENT === 'DEV'
+    ? ['http://localhost:5173']
+    : [FRONTEND_URL];
 
 const corsOptions = {
   origin: (origin, callback) => {
@@ -24,21 +24,13 @@ const corsOptions = {
       callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE','PATCH'],
-  allowedHeaders: ['X-CSRF-Token', 'X-Requested-With', 'Accept', 'Accept-Version', 'Content-Length', 'Content-MD5', 'Content-Type', 'Date', 'X-Api-Version', 'Authorization'],
+  methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 };
-
 app.use(cors(corsOptions));
 
 app.use(router);
 
-const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
-
-// runDummyPGQuery();
-// findNearestPG("TCs Gitanjali Park, Kolkata");
-
-
