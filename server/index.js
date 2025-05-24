@@ -12,13 +12,23 @@ app.use(express.json());
 const ENVIRONMENT=process.env.ENVIRONMENT;
 const FRONTEND_URL=process.env.FRONTEND_URL;
 
+
+const allowedOrigins = ENVIRONMENT==="DEV"?['http://localhost:5173']:[FRONTEND_URL];
+
 const corsOptions = {
-    origin:ENVIRONMENT==="DEV"?"*":FRONTEND_URL,
-    methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE','PATCH'],
-    credentials: true,
-    allowedHeaders: ['X-CSRF-Token', 'X-Requested-With', 'Accept', 'Accept-Version', 'Content-Length', 'Content-MD5', 'Content-Type', 'Date', 'X-Api-Version', 'Authorization']
-  };
-  app.use(cors(corsOptions));
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE','PATCH'],
+  credentials: true,
+  allowedHeaders: ['X-CSRF-Token', 'X-Requested-With', 'Accept', 'Accept-Version', 'Content-Length', 'Content-MD5', 'Content-Type', 'Date', 'X-Api-Version', 'Authorization']
+};
+
+app.use(cors(corsOptions));
 
 app.use(router);
 
