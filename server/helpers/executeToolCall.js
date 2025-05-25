@@ -61,7 +61,12 @@ export const findNearestPG=async(placeName)=>{
                       id: { $toString: "$_id" },
                       name: 1,
                       type: 1,
+                      address:1,
+                      contactNumber:1,
                       coordinates: 1,
+                      minPrice:1,
+                      maxPrice:1,
+                      images:1,
                       distanceInKm: { $round: ["$distanceInKm", 2] },
                       _id: 0
                     }

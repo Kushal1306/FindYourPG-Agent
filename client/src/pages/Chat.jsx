@@ -417,7 +417,7 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import  Badge  from "@/components/ui/badge"
+import Badge from "@/components/ui/badge"
 import {
   Loader2,
   Terminal,
@@ -431,6 +431,7 @@ import {
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
+import remarkBreaks from 'remark-breaks';
 
 export default function ChatUI() {
   const [messages, setMessages] = useState([])
@@ -606,7 +607,7 @@ export default function ChatUI() {
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto"
-      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 120)}px`
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 100)}px`
     }
   }, [input])
 
@@ -620,33 +621,33 @@ export default function ChatUI() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0 }}
-        className="mb-3 overflow-hidden"
+        className="mb-2"
       >
-        <div className="bg-gradient-to-r from-slate-50 to-slate-100/50 border border-slate-200/60 rounded-xl p-3 sm:p-4 shadow-sm">
+        <div className="bg-gradient-to-r from-slate-50 to-slate-100/50 border border-slate-200/60 rounded-lg p-3 shadow-sm">
           <div className="flex items-center justify-between gap-2 mb-2">
             <div className="flex items-center gap-2 min-w-0 flex-1">
-              <div className="p-1.5 bg-slate-200/50 rounded-lg">
-                <Terminal className="h-3.5 w-3.5 text-slate-600" />
+              <div className="p-1 bg-slate-200/50 rounded-md flex-shrink-0">
+                <Terminal className="h-3 w-3 text-slate-600" />
               </div>
-              <span className="font-medium text-slate-800 text-sm truncate">{tool.name}</span>
+              <span className="font-medium text-slate-800 text-xs truncate">{tool.name}</span>
             </div>
 
-            <div className="flex items-center gap-2 flex-shrink-0">
+            <div className="flex items-center gap-1 flex-shrink-0">
               {tool.status === "executing" && (
-                <Badge className="bg-amber-100 text-amber-800 border-amber-200 text-xs px-2 py-1">
-                  <Loader2 className="h-3 w-3 animate-spin mr-1" />
+                <Badge className="bg-amber-100 text-amber-800 border-amber-200 text-xs px-1.5 py-0.5">
+                  <Loader2 className="h-2.5 w-2.5 animate-spin mr-0.5" />
                   Running
                 </Badge>
               )}
               {tool.status === "completed" && (
-                <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200 text-xs px-2 py-1">
-                  <CheckCircle2 className="h-3 w-3 mr-1" />
+                <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200 text-xs px-1.5 py-0.5">
+                  <CheckCircle2 className="h-2.5 w-2.5 mr-0.5" />
                   Done
                 </Badge>
               )}
               {tool.status === "error" && (
-                <Badge className="bg-red-100 text-red-800 border-red-200 text-xs px-2 py-1">
-                  <AlertCircle className="h-3 w-3 mr-1" />
+                <Badge className="bg-red-100 text-red-800 border-red-200 text-xs px-1.5 py-0.5">
+                  <AlertCircle className="h-2.5 w-2.5 mr-0.5" />
                   Error
                 </Badge>
               )}
@@ -654,10 +655,10 @@ export default function ChatUI() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-7 w-7 p-0 hover:bg-slate-200/50 rounded-lg"
+                className="h-6 w-6 p-0 hover:bg-slate-200/50 rounded-md flex-shrink-0"
                 onClick={() => toggleToolExpansion(tool.id)}
               >
-                {isExpanded ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+                {isExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
               </Button>
             </div>
           </div>
@@ -671,9 +672,9 @@ export default function ChatUI() {
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
-                <div className="mt-3 p-3 bg-slate-100/50 rounded-lg border border-slate-200/50">
-                  <div className="text-xs font-medium text-slate-600 mb-2">Parameters:</div>
-                  <pre className="text-xs text-slate-700 overflow-x-auto whitespace-pre-wrap break-words">
+                <div className="mt-2 p-2 bg-slate-100/50 rounded-md border border-slate-200/50">
+                  <div className="text-xs font-medium text-slate-600 mb-1">Parameters:</div>
+                  <pre className="text-xs text-slate-700 overflow-x-auto whitespace-pre-wrap break-all">
                     {JSON.stringify(tool.args, null, 2)}
                   </pre>
                 </div>
@@ -682,9 +683,9 @@ export default function ChatUI() {
           </AnimatePresence>
 
           {tool.status === "error" && tool.error && (
-            <div className="mt-3 p-3 bg-red-50 rounded-lg border border-red-200">
-              <div className="text-xs font-medium text-red-600 mb-2">Error:</div>
-              <pre className="text-xs text-red-700 overflow-x-auto whitespace-pre-wrap break-words">{tool.error}</pre>
+            <div className="mt-2 p-2 bg-red-50 rounded-md border border-red-200">
+              <div className="text-xs font-medium text-red-600 mb-1">Error:</div>
+              <pre className="text-xs text-red-700 overflow-x-auto whitespace-pre-wrap break-all">{tool.error}</pre>
             </div>
           )}
         </div>
@@ -693,22 +694,22 @@ export default function ChatUI() {
   }
 
   return (
-    <div className="flex flex-col h-screen max-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20">
+    <div className="flex flex-col h-screen w-full bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20 overflow-hidden">
       <Card className="flex flex-col h-full border-0 rounded-none shadow-none bg-transparent">
         {/* Header */}
-        <CardHeader className="border-b bg-white/80 backdrop-blur-sm shadow-sm z-10 px-4 py-3 sm:px-6 sm:py-4">
-          <CardTitle className="flex items-center justify-center gap-3">
+        <CardHeader className="border-b bg-white/80 backdrop-blur-sm shadow-sm z-10 px-3 py-2 sm:px-4 sm:py-3 flex-shrink-0">
+          <CardTitle className="flex items-center justify-center gap-2">
             <div className="relative">
-              <Avatar className="h-8 w-8 sm:h-10 sm:w-10 ring-2 ring-blue-100">
+              <Avatar className="h-7 w-7 sm:h-8 sm:w-8 ring-2 ring-blue-100">
                 <AvatarImage src="/placeholder.svg?height=40&width=40" />
-                <AvatarFallback className="bg-gradient-to-br from-blue-600 to-blue-700 text-white font-semibold">
+                <AvatarFallback className="bg-gradient-to-br from-blue-600 to-blue-700 text-white font-semibold text-xs">
                   PG
                 </AvatarFallback>
               </Avatar>
-              <div className="absolute -bottom-1 -right-1 h-3 w-3 bg-green-500 rounded-full border-2 border-white"></div>
+              <div className="absolute -bottom-0.5 -right-0.5 h-2 w-2 bg-green-500 rounded-full border border-white"></div>
             </div>
             <div className="text-center">
-              <h1 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-700 to-indigo-700 bg-clip-text text-transparent">
+              <h1 className="text-base sm:text-lg font-bold bg-gradient-to-r from-blue-700 to-indigo-700 bg-clip-text text-transparent">
                 Find Your PG
               </h1>
               <p className="text-xs text-slate-500 hidden sm:block">AI-powered accommodation assistant</p>
@@ -717,36 +718,36 @@ export default function ChatUI() {
         </CardHeader>
 
         {/* Messages */}
-        <CardContent className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6">
+        <CardContent className="flex-1 overflow-y-auto p-2 sm:p-3 lg:p-4 space-y-3 sm:space-y-4">
           {messages.length === 0 && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex flex-col items-center justify-center h-full text-center space-y-4 sm:space-y-6 px-4"
+              className="flex flex-col items-center justify-center h-full text-center space-y-3 sm:space-y-4 px-3"
             >
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-full blur-lg opacity-20 animate-pulse"></div>
-                <Avatar className="h-16 w-16 sm:h-20 sm:w-20 relative bg-gradient-to-br from-blue-100 to-indigo-100 ring-4 ring-blue-50">
-                  <AvatarFallback className="text-blue-600 text-xl sm:text-2xl font-bold">
-                    <Sparkles className="h-8 w-8 sm:h-10 sm:w-10" />
+                <Avatar className="h-12 w-12 sm:h-16 sm:w-16 relative bg-gradient-to-br from-blue-100 to-indigo-100 ring-4 ring-blue-50">
+                  <AvatarFallback className="text-blue-600 text-lg sm:text-xl font-bold">
+                    <Sparkles className="h-6 w-6 sm:h-8 sm:w-8" />
                   </AvatarFallback>
                 </Avatar>
               </div>
-              <div className="space-y-2 max-w-md">
-                <h2 className="text-lg sm:text-xl font-semibold text-slate-800">Welcome to PG Finder!</h2>
-                <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+              <div className="space-y-2 max-w-xs sm:max-w-md">
+                <h2 className="text-base sm:text-lg font-semibold text-slate-800">Welcome to PG Finder!</h2>
+                <p className="text-sm text-slate-600 leading-relaxed">
                   I'm here to help you find the perfect paying guest accommodation. Share your location, budget, and
                   preferences to get started.
                 </p>
               </div>
-              <div className="flex flex-wrap gap-2 justify-center">
-                <Badge variant="secondary" className="text-xs px-3 py-1">
-                  🏠 Location-based search
+              <div className="flex flex-wrap gap-1.5 justify-center max-w-xs sm:max-w-none">
+                <Badge variant="secondary" className="text-xs px-2 py-1">
+                  🏠 Location-based
                 </Badge>
-                <Badge variant="secondary" className="text-xs px-3 py-1">
+                <Badge variant="secondary" className="text-xs px-2 py-1">
                   💰 Budget filtering
                 </Badge>
-                <Badge variant="secondary" className="text-xs px-3 py-1">
+                <Badge variant="secondary" className="text-xs px-2 py-1">
                   ⭐ Ratings
                 </Badge>
               </div>
@@ -762,11 +763,11 @@ export default function ChatUI() {
               className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
             >
               <div
-                className={`flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%] lg:max-w-[75%] ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}
+                className={`flex gap-2 max-w-[85%] sm:max-w-[80%] lg:max-w-[70%] ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}
               >
                 <Avatar
                   className={cn(
-                    "h-7 w-7 sm:h-8 sm:w-8 flex-shrink-0 ring-2",
+                    "h-6 w-6 sm:h-7 sm:w-7 flex-shrink-0 ring-2",
                     msg.role === "user"
                       ? "bg-gradient-to-br from-blue-600 to-blue-700 ring-blue-100"
                       : msg.role === "assistant"
@@ -776,17 +777,17 @@ export default function ChatUI() {
                 >
                   <AvatarFallback
                     className={cn(
-                      "text-xs sm:text-sm font-semibold",
+                      "text-xs font-semibold",
                       msg.role === "user" ? "text-white" : msg.role === "assistant" ? "text-blue-600" : "text-red-600",
                     )}
                   >
-                    {msg.role === "user" ? "You" : msg.role === "assistant" ? "AI" : "!"}
+                    {msg.role === "user" ? "U" : msg.role === "assistant" ? "AI" : "!"}
                   </AvatarFallback>
                 </Avatar>
 
                 <div
                   className={cn(
-                    "p-3 sm:p-4 rounded-2xl shadow-sm relative",
+                    "p-2.5 sm:p-3 rounded-xl shadow-sm relative min-w-0 flex-1",
                     msg.role === "user"
                       ? "bg-gradient-to-br from-blue-600 to-blue-700 text-white"
                       : msg.role === "assistant"
@@ -795,22 +796,23 @@ export default function ChatUI() {
                   )}
                 >
                   {msg.role === "user" && (
-                    <div className="absolute -bottom-1 -right-1 w-0 h-0 border-l-[8px] border-l-transparent border-t-[8px] border-t-blue-700"></div>
+                    <div className="absolute -bottom-1 -right-1 w-0 h-0 border-l-[6px] border-l-transparent border-t-[6px] border-t-blue-700"></div>
                   )}
                   {msg.role === "assistant" && (
-                    <div className="absolute -bottom-1 -left-1 w-0 h-0 border-r-[8px] border-r-transparent border-t-[8px] border-t-white"></div>
+                    <div className="absolute -bottom-1 -left-1 w-0 h-0 border-r-[6px] border-r-transparent border-t-[6px] border-t-white"></div>
                   )}
 
                   <div
                     className={cn("prose prose-sm max-w-none", msg.role === "user" ? "prose-invert" : "prose-slate")}
                   >
                     <ReactMarkdown
+                    remarkPlugins={[remarkBreaks]}
                       components={{
                         p: ({ children }) => (
-                          <p className="mb-2 last:mb-0 text-sm sm:text-base leading-relaxed">{children}</p>
+                          <p className="mb-1.5 last:mb-0 text-sm leading-relaxed break-words">{children}</p>
                         ),
-                        ul: ({ children }) => <ul className="mb-2 last:mb-0 text-sm sm:text-base">{children}</ul>,
-                        ol: ({ children }) => <ol className="mb-2 last:mb-0 text-sm sm:text-base">{children}</ol>,
+                        ul: ({ children }) => <ul className="mb-1.5 last:mb-0 text-sm break-words">{children}</ul>,
+                        ol: ({ children }) => <ol className="mb-1.5 last:mb-0 text-sm break-words">{children}</ol>,
                       }}
                     >
                       {msg.content}
@@ -819,9 +821,9 @@ export default function ChatUI() {
 
                   {/* Render tool calls that are part of a message */}
                   {msg.toolCalls && msg.toolCalls.length > 0 && (
-                    <div className="mt-4 pt-4 border-t border-slate-200">
-                      <div className="flex items-center gap-2 mb-3">
-                        <MessageSquare className="h-4 w-4 text-slate-500" />
+                    <div className="mt-3 pt-3 border-t border-slate-200">
+                      <div className="flex items-center gap-2 mb-2">
+                        <MessageSquare className="h-3 w-3 text-slate-500" />
                         <p className="text-xs font-medium text-slate-600">Tools executed:</p>
                       </div>
                       {msg.toolCalls.map(renderToolCall)}
@@ -835,15 +837,15 @@ export default function ChatUI() {
           {/* Render current tool calls that are being processed */}
           {currentToolCalls.length > 0 && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex justify-start">
-              <div className="flex gap-2 sm:gap-3 max-w-[90%] sm:max-w-[85%] lg:max-w-[75%]">
-                <Avatar className="h-7 w-7 sm:h-8 sm:w-8 bg-white ring-2 ring-slate-200 flex-shrink-0">
-                  <AvatarFallback className="text-blue-600 text-xs sm:text-sm font-semibold">AI</AvatarFallback>
+              <div className="flex gap-2 max-w-[85%] sm:max-w-[80%] lg:max-w-[70%]">
+                <Avatar className="h-6 w-6 sm:h-7 sm:w-7 bg-white ring-2 ring-slate-200 flex-shrink-0">
+                  <AvatarFallback className="text-blue-600 text-xs font-semibold">AI</AvatarFallback>
                 </Avatar>
-                <div className="p-3 sm:p-4 rounded-2xl bg-white border border-slate-200/60 shadow-md relative">
-                  <div className="absolute -bottom-1 -left-1 w-0 h-0 border-r-[8px] border-r-transparent border-t-[8px] border-t-white"></div>
-                  <div className="flex items-center gap-2 mb-3">
-                    <Terminal className="h-4 w-4 text-slate-500" />
-                    <p className="text-sm font-medium text-slate-600">Executing tools:</p>
+                <div className="p-2.5 sm:p-3 rounded-xl bg-white border border-slate-200/60 shadow-md relative min-w-0 flex-1">
+                  <div className="absolute -bottom-1 -left-1 w-0 h-0 border-r-[6px] border-r-transparent border-t-[6px] border-t-white"></div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Terminal className="h-3 w-3 text-slate-500" />
+                    <p className="text-xs font-medium text-slate-600">Executing tools:</p>
                   </div>
                   <AnimatePresence>{currentToolCalls.map(renderToolCall)}</AnimatePresence>
                 </div>
@@ -853,24 +855,24 @@ export default function ChatUI() {
 
           {isStreaming && currentToolCalls.length === 0 && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex justify-start">
-              <div className="flex gap-2 sm:gap-3">
-                <Avatar className="h-7 w-7 sm:h-8 sm:w-8 bg-white ring-2 ring-slate-200 flex-shrink-0">
-                  <AvatarFallback className="text-blue-600 text-xs sm:text-sm font-semibold">AI</AvatarFallback>
+              <div className="flex gap-2">
+                <Avatar className="h-6 w-6 sm:h-7 sm:w-7 bg-white ring-2 ring-slate-200 flex-shrink-0">
+                  <AvatarFallback className="text-blue-600 text-xs font-semibold">AI</AvatarFallback>
                 </Avatar>
-                <div className="p-3 sm:p-4 rounded-2xl bg-white border border-slate-200/60 shadow-md flex items-center space-x-3 relative">
-                  <div className="absolute -bottom-1 -left-1 w-0 h-0 border-r-[8px] border-r-transparent border-t-[8px] border-t-white"></div>
+                <div className="p-2.5 sm:p-3 rounded-xl bg-white border border-slate-200/60 shadow-md flex items-center space-x-2 relative">
+                  <div className="absolute -bottom-1 -left-1 w-0 h-0 border-r-[6px] border-r-transparent border-t-[6px] border-t-white"></div>
                   <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce"></div>
                     <div
-                      className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"
+                      className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce"
                       style={{ animationDelay: "0.1s" }}
                     ></div>
                     <div
-                      className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"
+                      className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce"
                       style={{ animationDelay: "0.2s" }}
                     ></div>
                   </div>
-                  <span className="text-slate-600 text-sm font-medium">Thinking...</span>
+                  <span className="text-slate-600 text-xs font-medium">Thinking...</span>
                 </div>
               </div>
             </motion.div>
@@ -880,24 +882,24 @@ export default function ChatUI() {
         </CardContent>
 
         {/* Input Footer */}
-        <CardFooter className="p-3 sm:p-4 lg:p-6 border-t bg-white/80 backdrop-blur-sm">
+        <CardFooter className="p-2 sm:p-3 lg:p-4 border-t bg-white/80 backdrop-blur-sm flex-shrink-0">
           <div className="relative w-full">
             <Textarea
               ref={textareaRef}
-              className="min-h-[60px] max-h-[120px] resize-none p-3 sm:p-4 pr-12 sm:pr-14 text-sm sm:text-base rounded-xl border-slate-200 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-blue-500 bg-white shadow-sm"
+              className="min-h-[50px] max-h-[100px] resize-none p-3 pr-11 text-sm rounded-xl border-slate-200 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-blue-500 bg-white shadow-sm"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ask about PGs nearby. Specify your location, budget, and preferences..."
+              placeholder="Ask about PGs nearby..."
               disabled={isStreaming}
             />
             <Button
               size="sm"
-              className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 h-8 w-8 sm:h-9 sm:w-9 p-0 rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-md disabled:opacity-50 transition-all duration-200"
+              className="absolute bottom-2 right-2 h-7 w-7 p-0 rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-md disabled:opacity-50 transition-all duration-200"
               onClick={handleSend}
               disabled={isStreaming || !input.trim()}
             >
-              {isStreaming ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+              {isStreaming ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
             </Button>
           </div>
         </CardFooter>
