@@ -50,7 +50,7 @@ export const findNearestPG=async(placeName)=>{
                     $geoNear: {
                       near: { type: "Point", coordinates: [lat, lng] },
                       distanceField: "distanceInKm",
-                      maxDistance: 50000,  // Increased for testing
+                      maxDistance: 1000000,  // Increased for testing
                       spherical: true,
                       distanceMultiplier: 0.001
                     }
